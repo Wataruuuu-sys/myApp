@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { TodoForm } from "./todo-form";
 
+export const dynamic = 'force-dynamic';
+
 export default async function TodoPage() {
   const todos = await prisma.todo.findMany({
     orderBy: { createdAt: "desc" },
