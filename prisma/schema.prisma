@@ -12,3 +12,17 @@ model Todo {
   title     String
   createdAt DateTime @default(now())
 }
+
+enum TopicStatus {
+  open
+  closed
+  answered
+}
+
+model Topic {
+  id         Int         @id @default(autoincrement())
+  title      String
+  status     TopicStatus @default(open)
+  closed_at  DateTime?
+  created_at DateTime    @default(now())
+}
