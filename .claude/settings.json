@@ -2,6 +2,7 @@
   "permissions": {
     "allow": [
       "Bash(bun run:*)",
+      "Bash(bun test:*)",
       "Bash(npx next:*)",
       "Bash(container ls:*)",
       "Bash(container exec:*)",
@@ -11,7 +12,8 @@
       "Bash(make:*)",
       "Bash(openspec new:*)",
       "Bash(openspec status:*)",
-      "Bash(openspec instructions:*)"
+      "Bash(openspec instructions:*)",
+      "Bash(bunx tsc:*)"
     ]
   }
 }
