@@ -31,7 +31,7 @@ up:
 	$(MAKE) run-web
 
 migrate:
-	bun run db:migrate
+	bunx prisma db push
 
 down: 
 	container stop db web
@@ -40,4 +40,8 @@ run-db:
 	container run --name db --detach --rm -p 5432:5432 my-db
 
 run-web:
-	container run --name web --detach --rm -p 3000:3000 --env-file .env my-web-app
+	container run --name web --detach --rm -p 3000:3000 --env-file .env \
+		-v $(PWD)/src:/app/src \
+		-v $(PWD)/next.config.ts:/app/next.config.ts \
+		-e WATCHPACK_POLLING=true \
+		my-web-app
