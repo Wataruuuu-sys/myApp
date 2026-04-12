@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bun run:*)",
+      "Bash(npx next:*)",
+      "Bash(container ls:*)",
+      "Bash(container exec:*)",
+      "Bash(container logs:*)",
+      "Bash(container run:*)",
+      "Bash(container stop:*)",
+      "Bash(make:*)",
+      "Bash(openspec new:*)",
+      "Bash(openspec status:*)",
+      "Bash(openspec instructions:*)"
+    ]
+  }
+}
