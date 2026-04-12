@@ -18,6 +18,9 @@ image:
 image-clean:
 	container image delete my-web-app my-db
 
+start:
+	container system start
+
 status:
 	container ls
 

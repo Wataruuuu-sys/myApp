@@ -1,19 +1,17 @@
-import { prisma } from "@/lib/prisma";
+import { todos } from "./actions";
 import { TodoForm } from "./todo-form";
 
 export const dynamic = 'force-dynamic';
 
 export default async function TodoPage() {
-  const todos = await prisma.todo.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+  const todoList = await todos();
 
   return (
     <div>
       <h1>TODO</h1>
       <TodoForm />
       <ul>
-        {todos.map((todo) => (
+        {todoList.map((todo) => (
           <li key={todo.id}>{todo.title}</li>
         ))}
       </ul>
