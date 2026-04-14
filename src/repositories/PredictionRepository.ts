@@ -5,6 +5,11 @@ import type { IPredictionRepository } from "./IRepository/IPredictionRepository"
 export class PredictionRepository implements IPredictionRepository {
   async submit(topicId: number, predict: number): Promise<PredictionModel> {
     return prisma.$transaction(async (tx) => {
+      const existing = await tx.prediction.findFirst({ where: { fk_topic_id: topicId } })
+      if (existing) {
+        await tx.predictionNumber.updateMany({ where: { fk_prediction_id: existing.id }, data: { predict } })
+        return existing
+      }
       const created = await tx.prediction.create({
         data: { fk_topic_id: topicId, prediction_type: "number" },
       })

@@ -49,6 +49,10 @@ run-web:
 		-e WATCHPACK_POLLING=true \
 		my-web-app
 
+restart-web:
+	container stop web
+	$(MAKE) run-web
+
 db-exec:
 	container exec -it db bash
 

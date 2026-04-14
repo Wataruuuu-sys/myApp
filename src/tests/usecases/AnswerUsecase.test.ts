@@ -4,10 +4,12 @@ import type { IAnswerRepository } from "@/repositories/IRepository/IAnswerReposi
 import type { ITopicRepository } from "@/repositories/IRepository/ITopicRepository"
 
 const mockSubmit = vi.fn()
+const mockFindByTopic = vi.fn()
 const mockFind = vi.fn()
 
 const mockAnswerRepository: IAnswerRepository = {
   submit: mockSubmit,
+  findByTopic: mockFindByTopic,
 }
 
 const mockTopicRepository: ITopicRepository = {

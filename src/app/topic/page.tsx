@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { topics } from "./actions";
 
 export const dynamic = 'force-dynamic';
@@ -12,7 +13,7 @@ export default async function TopicPage() {
       <ul>
         {topicList.map((topic) => (
           <li key={topic.id}>
-            {topic.title} [{topic.status}]
+            <Link href={`/topic/${topic.id}`}>{topic.title}</Link> [{topic.status}]
           </li>
         ))}
       </ul>

@@ -1,6 +1,7 @@
 import type { IAnswerRepository } from "@/repositories/IRepository/IAnswerRepository"
 import type { ITopicRepository } from "@/repositories/IRepository/ITopicRepository"
-import type { SubmitAnswerResult } from "@/types/answer"
+import type { SubmitAnswerResult, AnswerWithValue } from "@/types/answer"
+import { Answer } from "@/domain/Answer"
 import type { IAnswerUsecase } from "./IUsecase/IAnswerUsecase"
 
 export class AnswerUsecase implements IAnswerUsecase {
@@ -22,5 +23,11 @@ export class AnswerUsecase implements IAnswerUsecase {
 
     await this.answerRepository.submit(topicId, parsed)
     return { ok: true }
+  }
+
+  async findByTopic(topicId: number): Promise<AnswerWithValue | null> {
+    const record = await this.answerRepository.findByTopic(topicId)
+    if (!record) return null
+    return { ...Answer.from(record), answer: record.numbers[0]?.answer ?? 0 }
   }
 }
