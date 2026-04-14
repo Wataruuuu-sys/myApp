@@ -20,12 +20,13 @@ enum TopicStatus {
 }
 
 model Topic {
-  id         Int         @id @default(autoincrement())
-  title      String
-  status     TopicStatus @default(open)
-  closed_at  DateTime?
-  created_at DateTime    @default(now())
-  answers    Answer[]
+  id          Int          @id @default(autoincrement())
+  title       String
+  status      TopicStatus  @default(open)
+  closed_at   DateTime?
+  created_at  DateTime     @default(now())
+  answers     Answer[]
+  predictions Prediction[]
 }
 
 enum AnswerType {
@@ -47,4 +48,25 @@ model AnswerNumber {
   answer       Float
   created_at   DateTime @default(now())
   answer_rel   Answer   @relation(fields: [fk_answer_id], references: [id])
+}
+
+enum PredictionType {
+  number
+}
+
+model Prediction {
+  id              Int              @id @default(autoincrement())
+  fk_topic_id     Int
+  prediction_type PredictionType
+  created_at      DateTime         @default(now())
+  topic           Topic            @relation(fields: [fk_topic_id], references: [id])
+  numbers         PredictionNumber[]
+}
+
+model PredictionNumber {
+  id                Int        @id @default(autoincrement())
+  fk_prediction_id  Int
+  predict           Float
+  created_at        DateTime   @default(now())
+  prediction        Prediction @relation(fields: [fk_prediction_id], references: [id])
 }

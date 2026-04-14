@@ -4,6 +4,7 @@
       "Bash(bun run:*)",
       "Bash(bun test:*)",
       "Bash(npx next:*)",
+      "Bash(makedir:*)",
       "Bash(container ls:*)",
       "Bash(container exec:*)",
       "Bash(container logs:*)",
