@@ -1,10 +1,4 @@
-# ui-organisms
-
-## Purpose
-
-Atoms・Molecules を組み合わせ、ドメインコンテキストを持つUIコンポーネント群（Atomic Design におけるOrganisms層）を提供する。
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: TopicForm コンポーネント
 新規Topic作成フォームを提供する。タイトル入力と送信を担い、送信後にフォームをリセットする。`"use client"` コンポーネントとして実装する。フォーム全体をカードスタイルで表示し、入力欄とボタンを縦積みレイアウトで配置する。

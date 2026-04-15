@@ -3,5 +3,5 @@ type Props = {
 }
 
 export function ListItem({ children }: Props) {
-  return <li>{children}</li>
+  return <li className="py-1">{children}</li>
 }

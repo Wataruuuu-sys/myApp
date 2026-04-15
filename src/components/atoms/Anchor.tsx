@@ -6,5 +6,5 @@ type Props = {
 }
 
 export function Anchor({ href, children }: Props) {
-  return <Link href={href}>{children}</Link>
+  return <Link href={href} className="text-primary hover:underline">{children}</Link>
 }

@@ -14,7 +14,11 @@ export function TopicForm() {
   }
 
   return (
-    <form ref={formRef} action={handleSubmit}>
+    <form
+      ref={formRef}
+      action={handleSubmit}
+      className="flex flex-col gap-3 bg-surface border border-border rounded-xl p-6 shadow-sm"
+    >
       <Input type="text" name="title" placeholder="タイトルを入力" />
       <Button type="submit">作成</Button>
     </form>

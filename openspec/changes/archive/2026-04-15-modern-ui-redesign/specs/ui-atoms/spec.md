@@ -1,10 +1,4 @@
-# ui-atoms
-
-## Purpose
-
-ドメイン知識を持たない最小粒度のUIコンポーネント群（Atomic Design におけるAtoms層）を提供する。
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Button コンポーネント
 ドメイン知識を持たない汎用ボタンコンポーネントを提供する。`type`, `onClick`, `disabled`, `children`, `variant` を props として受け取り、ビジネスロジックを含まない。`variant` は `"primary"` または `"ghost"` を受け取り、デフォルトは `"primary"` とする。

@@ -11,13 +11,17 @@ type Props = {
 
 export function PredictionForm({ topicStatus, predictions, action }: Props) {
   return (
-    <div>
+    <div className="flex flex-col gap-6">
       {topicStatus === "open" && (
-        <NumberInputForm action={action} inputName="predict" step="any" submitLabel="予想する" />
+        <div className="bg-surface border border-border rounded-xl p-6 shadow-sm">
+          <NumberInputForm action={action} inputName="predict" step="any" submitLabel="予想する" />
+        </div>
       )}
-      <ul>
+      <ul className="bg-surface border border-border rounded-xl shadow-sm divide-y divide-border overflow-hidden">
         {predictions.map((p) => (
-          <ListItem key={p.id}>{p.predict}</ListItem>
+          <ListItem key={p.id}>
+            <span className="px-6 block">{p.predict}</span>
+          </ListItem>
         ))}
       </ul>
     </div>

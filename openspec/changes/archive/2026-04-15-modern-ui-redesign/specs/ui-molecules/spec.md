@@ -1,10 +1,4 @@
-# ui-molecules
-
-## Purpose
-
-Atoms を組み合わせた中粒度のUIコンポーネント群（Atomic Design におけるMolecules層）を提供する。ドメイン知識を含まない。
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: FormField コンポーネント
 ラベルと入力欄を組み合わせた汎用フォームフィールドコンポーネントを提供する。`label`, `name`, `type`, `placeholder`, `required`, `step` を props として受け取る。ドメイン知識を含まない。ラベルと入力欄を縦積みレイアウトで表示し、スペーシングとラベルスタイルを適用する。

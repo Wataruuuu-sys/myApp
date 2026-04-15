@@ -12,28 +12,32 @@ type Props = {
 
 export function TopicDetail({ topic, prediction, answer }: Props) {
   return (
-    <div>
-      <Heading level={1}>{topic.title}</Heading>
-      <p>ステータス: {topic.status}</p>
+    <div className="flex flex-col gap-6">
+      <div>
+        <Heading level={1}>{topic.title}</Heading>
+        <p className="text-sm text-muted mt-1">ステータス: {topic.status}</p>
+      </div>
 
-      <section>
+      <section className="bg-surface border border-border rounded-xl p-6 shadow-sm">
         <Heading level={2}>予想</Heading>
-        {prediction ? (
-          <p>{prediction.predict}</p>
-        ) : (
-          <>
-            <p>予想がない</p>
-            {topic.status === "open" && (
-              <Anchor href={`/topic/${topic.id}/predictions`}>予想する</Anchor>
-            )}
-          </>
-        )}
+        <div className="mt-3">
+          {prediction ? (
+            <p className="text-lg font-semibold">{prediction.predict}</p>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <p className="text-muted">予想がない</p>
+              {topic.status === "open" && (
+                <Anchor href={`/topic/${topic.id}/predictions`}>予想する</Anchor>
+              )}
+            </div>
+          )}
+        </div>
       </section>
 
       {answer && (
-        <section>
+        <section className="bg-surface border border-border rounded-xl p-6 shadow-sm">
           <Heading level={2}>回答</Heading>
-          <p>{answer.answer}</p>
+          <p className="text-lg font-semibold mt-3">{answer.answer}</p>
         </section>
       )}
     </div>
