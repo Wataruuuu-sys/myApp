@@ -1,11 +1,13 @@
-import { TopicForm } from "../topic-form";
+import { Heading } from "@/components/atoms/Heading"
+import { Anchor } from "@/components/atoms/Anchor"
+import { TopicForm } from "@/components/organisms/TopicForm"
 
 export default function TopicNewPage() {
   return (
     <div>
-      <h1>新規Topic作成</h1>
+      <Heading level={1}>新規Topic作成</Heading>
       <TopicForm />
-      <a href="/topic">一覧に戻る</a>
+      <Anchor href="/topic">一覧に戻る</Anchor>
     </div>
-  );
+  )
 }

@@ -1,6 +1,6 @@
 import { answerUsecase, predictionUsecase, topicUsecase } from "@/lib/container"
 import { notFound } from "next/navigation"
-import Link from "next/link"
+import { TopicDetail } from "@/components/organisms/TopicDetail"
 
 export const dynamic = "force-dynamic"
 
@@ -26,31 +26,5 @@ export default async function TopicDetailPage({ params }: Props) {
 
   const answer = topic.status === "answered" ? await answerUsecase.findByTopic(topicId) : null
 
-  return (
-    <div>
-      <h1>{topic.title}</h1>
-      <p>ステータス: {topic.status}</p>
-
-      <section>
-        <h2>予想</h2>
-        {prediction ? (
-          <p>{prediction.predict}</p>
-        ) : (
-          <>
-            <p>予想がない</p>
-            {topic.status === "open" && (
-              <Link href={`/topic/${topicId}/predictions`}>予想する</Link>
-            )}
-          </>
-        )}
-      </section>
-
-      {answer && (
-        <section>
-          <h2>回答</h2>
-          <p>{answer.answer}</p>
-        </section>
-      )}
-    </div>
-  )
+  return <TopicDetail topic={topic} prediction={prediction} answer={answer} />
 }

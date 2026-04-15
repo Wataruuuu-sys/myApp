@@ -1,22 +1,16 @@
-import Link from "next/link";
-import { topics } from "./actions";
+import { Heading } from "@/components/atoms/Heading"
+import { TopicList } from "@/components/organisms/TopicList"
+import { topics } from "./actions"
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'
 
 export default async function TopicPage() {
-  const topicList = await topics();
+  const topicList = await topics()
 
   return (
     <div>
-      <h1>Topics</h1>
-      <a href="/topic/new">新規作成</a>
-      <ul>
-        {topicList.map((topic) => (
-          <li key={topic.id}>
-            <Link href={`/topic/${topic.id}`}>{topic.title}</Link> [{topic.status}]
-          </li>
-        ))}
-      </ul>
+      <Heading level={1}>Topics</Heading>
+      <TopicList topics={topicList} />
     </div>
-  );
+  )
 }

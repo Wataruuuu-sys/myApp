@@ -1,35 +1,34 @@
-import { topicUsecase } from "@/lib/container";
-import { notFound } from "next/navigation";
-import { submitAnswer } from "./actions";
+import { topicUsecase } from "@/lib/container"
+import { notFound } from "next/navigation"
+import { Heading } from "@/components/atoms/Heading"
+import { AnswerForm } from "@/components/organisms/AnswerForm"
+import { submitAnswer } from "./actions"
 
-export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic"
 
 type Props = {
-  params: Promise<{ id: string }>;
-};
+  params: Promise<{ id: string }>
+}
 
 export default async function AnswerPage({ params }: Props) {
-  const { id } = await params;
-  const topicId = parseInt(id, 10);
+  const { id } = await params
+  const topicId = parseInt(id, 10)
   if (isNaN(topicId)) {
-    notFound();
+    notFound()
   }
 
-  const topicList = await topicUsecase.topics();
-  const topic = topicList.find((t) => t.id === topicId);
+  const topicList = await topicUsecase.topics()
+  const topic = topicList.find((t) => t.id === topicId)
   if (!topic) {
-    notFound();
+    notFound()
   }
 
-  const action = submitAnswer.bind(null, topicId);
+  const action = submitAnswer.bind(null, topicId)
 
   return (
     <div>
-      <h1>{topic.title}</h1>
-      <form action={action}>
-        <input type="number" name="answer" step="any" required />
-        <button type="submit">回答する</button>
-      </form>
+      <Heading level={1}>{topic.title}</Heading>
+      <AnswerForm action={action} />
     </div>
-  );
+  )
 }
