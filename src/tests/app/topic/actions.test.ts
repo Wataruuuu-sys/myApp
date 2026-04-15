@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
 
-const mockAdd = vi.fn()
+const mockExecute = vi.fn()
 const mockTopics = vi.fn()
 const mockRevalidatePath = vi.fn()
 
 vi.mock("@/lib/container", () => ({
   topicUsecase: {
-    add: (...args: Parameters<typeof mockAdd>) => mockAdd(...args),
+    execute: (...args: Parameters<typeof mockExecute>) => mockExecute(...args),
     topics: (...args: Parameters<typeof mockTopics>) => mockTopics(...args),
   },
 }))
@@ -40,18 +40,18 @@ describe("addTopic", () => {
   })
 
   it("有効なタイトルでUsecaseが呼び出され{ ok: true }が返る", async () => {
-    mockAdd.mockResolvedValue({ ok: true })
+    mockExecute.mockResolvedValue({ ok: true })
     const formData = new FormData()
     formData.set("title", "今日何回ご飯を食べるか？")
 
     const result = await addTopic(formData)
 
-    expect(mockAdd).toHaveBeenCalledWith("今日何回ご飯を食べるか？")
+    expect(mockExecute).toHaveBeenCalledWith({ title: "今日何回ご飯を食べるか？" })
     expect(result).toEqual({ ok: true })
   })
 
   it("成功時にrevalidatePathが呼び出される", async () => {
-    mockAdd.mockResolvedValue({ ok: true })
+    mockExecute.mockResolvedValue({ ok: true })
     const formData = new FormData()
     formData.set("title", "今日何回ご飯を食べるか？")
 
@@ -65,12 +65,12 @@ describe("addTopic", () => {
 
     const result = await addTopic(formData)
 
-    expect(mockAdd).not.toHaveBeenCalled()
+    expect(mockExecute).not.toHaveBeenCalled()
     expect(result).toEqual({ ok: false, error: "invalid_title" })
   })
 
   it("Usecaseがok: falseを返す場合はrevalidatePathは呼び出されない", async () => {
-    mockAdd.mockResolvedValue({ ok: false, error: "invalid_title" })
+    mockExecute.mockResolvedValue({ ok: false, error: "invalid_title" })
     const formData = new FormData()
     formData.set("title", "")
 

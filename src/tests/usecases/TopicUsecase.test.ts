@@ -5,6 +5,8 @@ import type { ITopicRepository } from "@/repositories/IRepository/ITopicReposito
 const mockRepository: ITopicRepository = {
   create: vi.fn(),
   all: vi.fn(),
+  find: vi.fn(),
+  markAnswered: vi.fn(),
 }
 
 describe("TopicUsecase", () => {
@@ -14,13 +16,13 @@ describe("TopicUsecase", () => {
     vi.clearAllMocks()
   })
 
-  describe("add", () => {
+  describe("execute", () => {
     it("有効なタイトルでTopicを追加しok: trueを返す", async () => {
       vi.mocked(mockRepository.create).mockResolvedValue({
         id: 1, title: "テスト", status: "open", closed_at: null, created_at: new Date(),
       })
 
-      const result = await usecase.add("テスト")
+      const result = await usecase.execute({ title: "テスト" })
 
       expect(mockRepository.create).toHaveBeenCalledWith("テスト")
       expect(result).toEqual({ ok: true })
@@ -31,20 +33,20 @@ describe("TopicUsecase", () => {
         id: 1, title: "テスト", status: "open", closed_at: null, created_at: new Date(),
       })
 
-      await usecase.add("  テスト  ")
+      await usecase.execute({ title: "  テスト  " })
 
       expect(mockRepository.create).toHaveBeenCalledWith("テスト")
     })
 
     it("空文字の場合はリポジトリを呼び出さずok: false, error: invalid_titleを返す", async () => {
-      const result = await usecase.add("")
+      const result = await usecase.execute({ title: "" })
 
       expect(mockRepository.create).not.toHaveBeenCalled()
       expect(result).toEqual({ ok: false, error: "invalid_title" })
     })
 
     it("空白のみの場合はリポジトリを呼び出さずok: false, error: invalid_titleを返す", async () => {
-      const result = await usecase.add("   ")
+      const result = await usecase.execute({ title: "   " })
 
       expect(mockRepository.create).not.toHaveBeenCalled()
       expect(result).toEqual({ ok: false, error: "invalid_title" })

@@ -26,7 +26,7 @@ describe("AnswerUsecase", () => {
     vi.clearAllMocks()
   })
 
-  describe("submit", () => {
+  describe("execute", () => {
     const openTopic = { id: 1, title: "テスト", status: "open" as const, closed_at: null, created_at: new Date() }
     const answeredTopic = { ...openTopic, status: "answered" as const }
 
@@ -36,7 +36,7 @@ describe("AnswerUsecase", () => {
         id: 1, fk_topic_id: 1, answer_type: "number", created_at: new Date(),
       })
 
-      const result = await usecase.submit(1, "42")
+      const result = await usecase.execute({ topicId: 1, answer: "42" })
 
       expect(mockFind).toHaveBeenCalledWith(1)
       expect(mockSubmit).toHaveBeenCalledWith(1, 42)
@@ -44,7 +44,7 @@ describe("AnswerUsecase", () => {
     })
 
     it("数値に変換できない文字列の場合はリポジトリを呼び出さずinvalid_answerを返す", async () => {
-      const result = await usecase.submit(1, "abc")
+      const result = await usecase.execute({ topicId: 1, answer: "abc" })
 
       expect(mockFind).not.toHaveBeenCalled()
       expect(mockSubmit).not.toHaveBeenCalled()
@@ -52,7 +52,7 @@ describe("AnswerUsecase", () => {
     })
 
     it("空文字の場合はリポジトリを呼び出さずinvalid_answerを返す", async () => {
-      const result = await usecase.submit(1, "")
+      const result = await usecase.execute({ topicId: 1, answer: "" })
 
       expect(mockSubmit).not.toHaveBeenCalled()
       expect(result).toEqual({ ok: false, error: "invalid_answer" })
@@ -61,7 +61,7 @@ describe("AnswerUsecase", () => {
     it("Topicが存在しない場合はalready_answeredを返す", async () => {
       mockFind.mockResolvedValue(null)
 
-      const result = await usecase.submit(99, "42")
+      const result = await usecase.execute({ topicId: 99, answer: "42" })
 
       expect(mockSubmit).not.toHaveBeenCalled()
       expect(result).toEqual({ ok: false, error: "already_answered" })
@@ -70,7 +70,7 @@ describe("AnswerUsecase", () => {
     it("Topicが既にansweredの場合はalready_answeredを返す", async () => {
       mockFind.mockResolvedValue(answeredTopic)
 
-      const result = await usecase.submit(1, "42")
+      const result = await usecase.execute({ topicId: 1, answer: "42" })
 
       expect(mockSubmit).not.toHaveBeenCalled()
       expect(result).toEqual({ ok: false, error: "already_answered" })

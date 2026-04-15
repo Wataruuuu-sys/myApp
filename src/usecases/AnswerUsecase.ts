@@ -1,16 +1,19 @@
 import type { IAnswerRepository } from "@/repositories/IRepository/IAnswerRepository"
 import type { ITopicRepository } from "@/repositories/IRepository/ITopicRepository"
-import type { SubmitAnswerResult, AnswerWithValue } from "@/types/answer"
+import type { AnswerInput, SubmitAnswerResult, AnswerWithValue } from "@/types/answer"
 import { Answer } from "@/domain/Answer"
 import type { IAnswerUsecase } from "./IUsecase/IAnswerUsecase"
+import { BaseUsecase } from "./BaseUsecase"
 
-export class AnswerUsecase implements IAnswerUsecase {
+export class AnswerUsecase extends BaseUsecase<AnswerInput, SubmitAnswerResult> implements IAnswerUsecase {
   constructor(
     private readonly answerRepository: IAnswerRepository,
     private readonly topicRepository: ITopicRepository,
-  ) {}
+  ) {
+    super()
+  }
 
-  async submit(topicId: number, answer: string): Promise<SubmitAnswerResult> {
+  async execute({ topicId, answer }: AnswerInput): Promise<SubmitAnswerResult> {
     const parsed = parseFloat(answer)
     if (isNaN(parsed)) {
       return { ok: false, error: "invalid_answer" }

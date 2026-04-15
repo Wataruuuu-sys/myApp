@@ -1,12 +1,15 @@
 import { Topic } from "@/domain/Topic"
 import type { ITopicRepository } from "@/repositories/IRepository/ITopicRepository"
-import type { AddTopicResult } from "@/types/topic"
+import type { TopicInput, AddTopicResult } from "@/types/topic"
 import type { ITopicUsecase } from "./IUsecase/ITopicUsecase"
+import { BaseUsecase } from "./BaseUsecase"
 
-export class TopicUsecase implements ITopicUsecase {
-  constructor(private readonly repository: ITopicRepository) {}
+export class TopicUsecase extends BaseUsecase<TopicInput, AddTopicResult> implements ITopicUsecase {
+  constructor(private readonly repository: ITopicRepository) {
+    super()
+  }
 
-  async add(title: string): Promise<AddTopicResult> {
+  async execute({ title }: TopicInput): Promise<AddTopicResult> {
     const trimmed = title.trim()
     if (trimmed === "") {
       return { ok: false, error: "invalid_title" }

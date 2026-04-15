@@ -26,7 +26,7 @@ describe("PredictionUsecase", () => {
     vi.clearAllMocks()
   })
 
-  describe("submit", () => {
+  describe("execute", () => {
     const openTopic = { id: 1, title: "テスト", status: "open" as const, closed_at: null, created_at: new Date() }
     const closedTopic = { ...openTopic, status: "closed" as const }
     const answeredTopic = { ...openTopic, status: "answered" as const }
@@ -37,7 +37,7 @@ describe("PredictionUsecase", () => {
         id: 1, fk_topic_id: 1, prediction_type: "number", created_at: new Date(),
       })
 
-      const result = await usecase.submit(1, "42")
+      const result = await usecase.execute({ topicId: 1, predict: "42" })
 
       expect(mockFind).toHaveBeenCalledWith(1)
       expect(mockSubmit).toHaveBeenCalledWith(1, 42)
@@ -45,7 +45,7 @@ describe("PredictionUsecase", () => {
     })
 
     it("数値に変換できない文字列の場合はリポジトリを呼び出さずinvalid_predictionを返す", async () => {
-      const result = await usecase.submit(1, "abc")
+      const result = await usecase.execute({ topicId: 1, predict: "abc" })
 
       expect(mockFind).not.toHaveBeenCalled()
       expect(mockSubmit).not.toHaveBeenCalled()
@@ -53,7 +53,7 @@ describe("PredictionUsecase", () => {
     })
 
     it("空文字の場合はリポジトリを呼び出さずinvalid_predictionを返す", async () => {
-      const result = await usecase.submit(1, "")
+      const result = await usecase.execute({ topicId: 1, predict: "" })
 
       expect(mockSubmit).not.toHaveBeenCalled()
       expect(result).toEqual({ ok: false, error: "invalid_prediction" })
@@ -62,7 +62,7 @@ describe("PredictionUsecase", () => {
     it("Topicが存在しない場合はtopic_not_openを返す", async () => {
       mockFind.mockResolvedValue(null)
 
-      const result = await usecase.submit(99, "42")
+      const result = await usecase.execute({ topicId: 99, predict: "42" })
 
       expect(mockSubmit).not.toHaveBeenCalled()
       expect(result).toEqual({ ok: false, error: "topic_not_open" })
@@ -71,7 +71,7 @@ describe("PredictionUsecase", () => {
     it("Topicがclosedの場合はtopic_not_openを返す", async () => {
       mockFind.mockResolvedValue(closedTopic)
 
-      const result = await usecase.submit(1, "42")
+      const result = await usecase.execute({ topicId: 1, predict: "42" })
 
       expect(mockSubmit).not.toHaveBeenCalled()
       expect(result).toEqual({ ok: false, error: "topic_not_open" })
@@ -80,7 +80,7 @@ describe("PredictionUsecase", () => {
     it("Topicがansweredの場合はtopic_not_openを返す", async () => {
       mockFind.mockResolvedValue(answeredTopic)
 
-      const result = await usecase.submit(1, "42")
+      const result = await usecase.execute({ topicId: 1, predict: "42" })
 
       expect(mockSubmit).not.toHaveBeenCalled()
       expect(result).toEqual({ ok: false, error: "topic_not_open" })

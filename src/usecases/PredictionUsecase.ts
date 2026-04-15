@@ -1,16 +1,19 @@
 import type { IPredictionRepository } from "@/repositories/IRepository/IPredictionRepository"
 import type { ITopicRepository } from "@/repositories/IRepository/ITopicRepository"
-import type { SubmitPredictionResult, PredictionWithValue } from "@/types/prediction"
+import type { PredictionInput, SubmitPredictionResult, PredictionWithValue } from "@/types/prediction"
 import { Prediction } from "@/domain/Prediction"
 import type { IPredictionUsecase } from "./IUsecase/IPredictionUsecase"
+import { BaseUsecase } from "./BaseUsecase"
 
-export class PredictionUsecase implements IPredictionUsecase {
+export class PredictionUsecase extends BaseUsecase<PredictionInput, SubmitPredictionResult> implements IPredictionUsecase {
   constructor(
     private readonly predictionRepository: IPredictionRepository,
     private readonly topicRepository: ITopicRepository,
-  ) {}
+  ) {
+    super()
+  }
 
-  async submit(topicId: number, predict: string): Promise<SubmitPredictionResult> {
+  async execute({ topicId, predict }: PredictionInput): Promise<SubmitPredictionResult> {
     const parsed = parseFloat(predict)
     if (isNaN(parsed)) {
       return { ok: false, error: "invalid_prediction" }

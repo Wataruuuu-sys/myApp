@@ -1,20 +1,16 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { predictionUsecase } from "@/lib/container";
+import { Validation } from "@/lib/validation";
+import { executeAction } from "@/lib/action";
 import type { SubmitPredictionResult, PredictionWithValue } from "@/types/prediction";
 
 export async function submitPrediction(topicId: number, formData: FormData): Promise<SubmitPredictionResult> {
-  const predict = formData.get("predict");
-  if (typeof predict !== "string") {
+  const predict = Validation.string(formData, "predict");
+  if (!predict) {
     return { ok: false, error: "invalid_prediction" };
   }
-
-  const result = await predictionUsecase.submit(topicId, predict);
-  if (result.ok) {
-    revalidatePath(`/topic/${topicId}`);
-  }
-  return result;
+  return executeAction(predictionUsecase, { topicId, predict }, [`/topic/${topicId}`]);
 }
 
 export async function predictions(topicId: number): Promise<PredictionWithValue[]> {
