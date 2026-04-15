@@ -1,4 +1,4 @@
-import type { TopicModel } from "@/generated/prisma"
+import type { Topic as TopicModel } from "@/generated/prisma"
 
 export interface ITopicRepository {
   create(title: string): Promise<TopicModel>

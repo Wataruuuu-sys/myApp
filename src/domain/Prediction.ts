@@ -1,5 +1,4 @@
-import type { PredictionType } from "@/generated/prisma"
-import type { PredictionModel } from "@/generated/prisma"
+import type { PredictionType, Prediction as PredictionModel } from "@/generated/prisma"
 
 export class Prediction {
   constructor(

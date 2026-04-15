@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma"
-import type { TopicModel } from "@/generated/prisma"
+import type { Topic as TopicModel } from "@/generated/prisma"
 import type { ITopicRepository } from "./IRepository/ITopicRepository"
 
 export class TopicRepository implements ITopicRepository {

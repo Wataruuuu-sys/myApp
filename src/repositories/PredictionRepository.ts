@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma"
-import type { PredictionModel } from "@/generated/prisma"
+import type { Prediction as PredictionModel } from "@/generated/prisma"
 import type { IPredictionRepository } from "./IRepository/IPredictionRepository"
 
 export class PredictionRepository implements IPredictionRepository {

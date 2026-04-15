@@ -1,5 +1,4 @@
-import type { TopicStatus } from "@/generated/prisma"
-import type { TopicModel } from "@/generated/prisma"
+import type { TopicStatus, Topic as TopicModel } from "@/generated/prisma"
 
 export class Topic {
   constructor(

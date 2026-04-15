@@ -1,4 +1,4 @@
-import type { PredictionModel } from "@/generated/prisma"
+import type { Prediction as PredictionModel } from "@/generated/prisma"
 
 export interface IPredictionRepository {
   submit(topicId: number, predict: number): Promise<PredictionModel>

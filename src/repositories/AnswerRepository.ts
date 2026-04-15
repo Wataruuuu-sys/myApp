@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma"
-import type { AnswerModel } from "@/generated/prisma"
+import type { Answer as AnswerModel } from "@/generated/prisma"
 import type { IAnswerRepository } from "./IRepository/IAnswerRepository"
 
 export class AnswerRepository implements IAnswerRepository {

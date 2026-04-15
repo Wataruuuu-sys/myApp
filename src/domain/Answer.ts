@@ -1,5 +1,4 @@
-import type { AnswerType } from "@/generated/prisma"
-import type { AnswerModel } from "@/generated/prisma"
+import type { AnswerType, Answer as AnswerModel } from "@/generated/prisma"
 
 export class Answer {
   constructor(
