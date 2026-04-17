@@ -1,6 +1,7 @@
-import type { PredictionInput, SubmitPredictionResult, PredictionWithValue } from "@/types/prediction"
+import type { CreatePredictionInput, UpdatePredictionInput, CreatePredictionResult, UpdatePredictionResult, PredictionWithValue } from "@/types/prediction"
 
 export interface IPredictionUsecase {
-  execute(input: PredictionInput): Promise<SubmitPredictionResult>
+  create(input: CreatePredictionInput): Promise<CreatePredictionResult>
+  update(input: UpdatePredictionInput): Promise<UpdatePredictionResult>
   list(topicId: number): Promise<PredictionWithValue[]>
 }

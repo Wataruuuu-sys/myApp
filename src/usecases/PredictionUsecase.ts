@@ -1,19 +1,16 @@
 import type { IPredictionRepository } from "@/repositories/IRepository/IPredictionRepository"
 import type { ITopicRepository } from "@/repositories/IRepository/ITopicRepository"
-import type { PredictionInput, SubmitPredictionResult, PredictionWithValue } from "@/types/prediction"
+import type { CreatePredictionInput, UpdatePredictionInput, CreatePredictionResult, UpdatePredictionResult, PredictionWithValue } from "@/types/prediction"
 import { Prediction } from "@/domain/Prediction"
 import type { IPredictionUsecase } from "./IUsecase/IPredictionUsecase"
-import { BaseUsecase } from "./BaseUsecase"
 
-export class PredictionUsecase extends BaseUsecase<PredictionInput, SubmitPredictionResult> implements IPredictionUsecase {
+export class PredictionUsecase implements IPredictionUsecase {
   constructor(
     private readonly predictionRepository: IPredictionRepository,
     private readonly topicRepository: ITopicRepository,
-  ) {
-    super()
-  }
+  ) {}
 
-  async execute({ topicId, predict }: PredictionInput): Promise<SubmitPredictionResult> {
+  async create({ topicId, predict }: CreatePredictionInput): Promise<CreatePredictionResult> {
     const parsed = parseFloat(predict)
     if (isNaN(parsed)) {
       return { ok: false, error: "invalid_prediction" }
@@ -24,7 +21,27 @@ export class PredictionUsecase extends BaseUsecase<PredictionInput, SubmitPredic
       return { ok: false, error: "topic_not_open" }
     }
 
-    await this.predictionRepository.submit(topicId, parsed)
+    await this.predictionRepository.create(topicId, parsed)
+    return { ok: true }
+  }
+
+  async update({ predictionId, predict }: UpdatePredictionInput): Promise<UpdatePredictionResult> {
+    const parsed = parseFloat(predict)
+    if (isNaN(parsed)) {
+      return { ok: false, error: "invalid_prediction" }
+    }
+
+    const prediction = await this.predictionRepository.findById(predictionId)
+    if (!prediction) {
+      return { ok: false, error: "topic_not_open" }
+    }
+
+    const topic = await this.topicRepository.find(prediction.fk_topic_id)
+    if (!topic || topic.status !== "open") {
+      return { ok: false, error: "topic_not_open" }
+    }
+
+    await this.predictionRepository.update(predictionId, parsed)
     return { ok: true }
   }
 

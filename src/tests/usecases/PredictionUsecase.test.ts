@@ -3,14 +3,17 @@ import { PredictionUsecase } from "@/usecases/PredictionUsecase"
 import type { IPredictionRepository } from "@/repositories/IRepository/IPredictionRepository"
 import type { ITopicRepository } from "@/repositories/IRepository/ITopicRepository"
 
-const mockSubmit = vi.fn()
+const mockCreate = vi.fn()
+const mockUpdate = vi.fn()
 const mockList = vi.fn()
 const mockFind = vi.fn()
+const mockFindById = vi.fn()
 
 const mockPredictionRepository: IPredictionRepository = {
-  submit: mockSubmit,
+  create: mockCreate,
+  update: mockUpdate,
   list: mockList,
-  findById: vi.fn(),
+  findById: mockFindById,
 }
 
 const mockTopicRepository: ITopicRepository = {
@@ -27,63 +30,108 @@ describe("PredictionUsecase", () => {
     vi.clearAllMocks()
   })
 
-  describe("execute", () => {
+  describe("create", () => {
     const openTopic = { id: 1, title: "テスト", status: "open" as const, closed_at: null, created_at: new Date() }
     const closedTopic = { ...openTopic, status: "closed" as const }
     const answeredTopic = { ...openTopic, status: "answered" as const }
 
-    it("有効な数値で予想を登録しok: trueを返す", async () => {
+    it("有効な数値で予想を作成しok: trueを返す", async () => {
       mockFind.mockResolvedValue(openTopic)
-      mockSubmit.mockResolvedValue({
+      mockCreate.mockResolvedValue({
         id: 1, fk_topic_id: 1, prediction_type: "number", created_at: new Date(),
       })
 
-      const result = await usecase.execute({ topicId: 1, predict: "42" })
+      const result = await usecase.create({ topicId: 1, predict: "42" })
 
       expect(mockFind).toHaveBeenCalledWith(1)
-      expect(mockSubmit).toHaveBeenCalledWith(1, 42)
+      expect(mockCreate).toHaveBeenCalledWith(1, 42)
       expect(result).toEqual({ ok: true })
     })
 
     it("数値に変換できない文字列の場合はリポジトリを呼び出さずinvalid_predictionを返す", async () => {
-      const result = await usecase.execute({ topicId: 1, predict: "abc" })
+      const result = await usecase.create({ topicId: 1, predict: "abc" })
 
       expect(mockFind).not.toHaveBeenCalled()
-      expect(mockSubmit).not.toHaveBeenCalled()
+      expect(mockCreate).not.toHaveBeenCalled()
       expect(result).toEqual({ ok: false, error: "invalid_prediction" })
     })
 
     it("空文字の場合はリポジトリを呼び出さずinvalid_predictionを返す", async () => {
-      const result = await usecase.execute({ topicId: 1, predict: "" })
+      const result = await usecase.create({ topicId: 1, predict: "" })
 
-      expect(mockSubmit).not.toHaveBeenCalled()
+      expect(mockCreate).not.toHaveBeenCalled()
       expect(result).toEqual({ ok: false, error: "invalid_prediction" })
     })
 
     it("Topicが存在しない場合はtopic_not_openを返す", async () => {
       mockFind.mockResolvedValue(null)
 
-      const result = await usecase.execute({ topicId: 99, predict: "42" })
+      const result = await usecase.create({ topicId: 99, predict: "42" })
 
-      expect(mockSubmit).not.toHaveBeenCalled()
+      expect(mockCreate).not.toHaveBeenCalled()
       expect(result).toEqual({ ok: false, error: "topic_not_open" })
     })
 
     it("Topicがclosedの場合はtopic_not_openを返す", async () => {
       mockFind.mockResolvedValue(closedTopic)
 
-      const result = await usecase.execute({ topicId: 1, predict: "42" })
+      const result = await usecase.create({ topicId: 1, predict: "42" })
 
-      expect(mockSubmit).not.toHaveBeenCalled()
+      expect(mockCreate).not.toHaveBeenCalled()
       expect(result).toEqual({ ok: false, error: "topic_not_open" })
     })
 
     it("Topicがansweredの場合はtopic_not_openを返す", async () => {
       mockFind.mockResolvedValue(answeredTopic)
 
-      const result = await usecase.execute({ topicId: 1, predict: "42" })
+      const result = await usecase.create({ topicId: 1, predict: "42" })
 
-      expect(mockSubmit).not.toHaveBeenCalled()
+      expect(mockCreate).not.toHaveBeenCalled()
+      expect(result).toEqual({ ok: false, error: "topic_not_open" })
+    })
+  })
+
+  describe("update", () => {
+    const openTopic = { id: 1, title: "テスト", status: "open" as const, closed_at: null, created_at: new Date() }
+    const predictionModel = { id: 10, fk_topic_id: 1, prediction_type: "number" as const, fk_bet_id: null, created_at: new Date() }
+
+    it("有効な数値で予想を更新しok: trueを返す", async () => {
+      mockFindById.mockResolvedValue(predictionModel)
+      mockFind.mockResolvedValue(openTopic)
+      mockUpdate.mockResolvedValue(undefined)
+
+      const result = await usecase.update({ predictionId: 10, predict: "99" })
+
+      expect(mockFindById).toHaveBeenCalledWith(10)
+      expect(mockFind).toHaveBeenCalledWith(1)
+      expect(mockUpdate).toHaveBeenCalledWith(10, 99)
+      expect(result).toEqual({ ok: true })
+    })
+
+    it("数値に変換できない文字列の場合はリポジトリを呼び出さずinvalid_predictionを返す", async () => {
+      const result = await usecase.update({ predictionId: 10, predict: "abc" })
+
+      expect(mockFindById).not.toHaveBeenCalled()
+      expect(mockUpdate).not.toHaveBeenCalled()
+      expect(result).toEqual({ ok: false, error: "invalid_prediction" })
+    })
+
+    it("Predictionが存在しない場合はtopic_not_openを返す", async () => {
+      mockFindById.mockResolvedValue(null)
+
+      const result = await usecase.update({ predictionId: 99, predict: "42" })
+
+      expect(mockUpdate).not.toHaveBeenCalled()
+      expect(result).toEqual({ ok: false, error: "topic_not_open" })
+    })
+
+    it("Topicがclosedの場合はtopic_not_openを返す", async () => {
+      mockFindById.mockResolvedValue(predictionModel)
+      mockFind.mockResolvedValue({ ...openTopic, status: "closed" as const })
+
+      const result = await usecase.update({ predictionId: 10, predict: "42" })
+
+      expect(mockUpdate).not.toHaveBeenCalled()
       expect(result).toEqual({ ok: false, error: "topic_not_open" })
     })
   })

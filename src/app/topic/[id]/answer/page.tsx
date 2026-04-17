@@ -26,7 +26,7 @@ export default async function AnswerPage({ params }: Props) {
   const action = submitAnswer.bind(null, topicId)
 
   return (
-    <div>
+    <div className="flex flex-col gap-6">
       <Heading level={1}>{topic.title}</Heading>
       <AnswerForm action={action} />
     </div>

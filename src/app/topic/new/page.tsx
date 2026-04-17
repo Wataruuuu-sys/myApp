@@ -4,7 +4,7 @@ import { TopicForm } from "@/components/organisms/TopicForm"
 
 export default function TopicNewPage() {
   return (
-    <div>
+    <div className="flex flex-col gap-6">
       <Heading level={1}>新規Topic作成</Heading>
       <TopicForm />
       <Anchor href="/topic">一覧に戻る</Anchor>

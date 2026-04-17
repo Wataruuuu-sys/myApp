@@ -2,7 +2,7 @@ import { topicUsecase } from "@/lib/container"
 import { notFound } from "next/navigation"
 import { Heading } from "@/components/atoms/Heading"
 import { PredictionForm } from "@/components/organisms/PredictionForm"
-import { submitPrediction, predictions } from "./actions"
+import { createPrediction, predictions } from "./actions"
 
 export const dynamic = "force-dynamic"
 
@@ -24,10 +24,10 @@ export default async function PredictionPage({ params }: Props) {
   }
 
   const predictionList = await predictions(topicId)
-  const action = submitPrediction.bind(null, topicId)
+  const action = createPrediction.bind(null, topicId)
 
   return (
-    <div>
+    <div className="flex flex-col gap-6">
       <Heading level={1}>{topic.title}</Heading>
       <PredictionForm topicStatus={topic.status} predictions={predictionList} action={action} />
     </div>

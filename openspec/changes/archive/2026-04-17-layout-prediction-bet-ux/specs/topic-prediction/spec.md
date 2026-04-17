@@ -1,8 +1,4 @@
-## Purpose
-
-Topic に対してユーザーが数値による予想を投稿・参照できる機能を提供する。
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: 予想の投稿
 
@@ -34,17 +30,8 @@ Topic が `open` ステータスの場合に限り、ユーザーは数値によ
 - **WHEN** 存在しない topicId で予想を投稿する
 - **THEN** `topic_not_open` エラーを返し、データは作成されない
 
-### Requirement: 予想一覧の取得
+## REMOVED Requirements
 
-Topic に紐づく全予想を取得できなければならない（SHALL）。
-
-#### Scenario: 予想一覧の取得
-
-- **WHEN** topicId を指定して予想一覧を取得する
-- **THEN** その Topic に紐づく Prediction の一覧（各予想の数値を含む）を返す
-
-#### Scenario: 予想がない場合の取得
-
-- **WHEN** 予想が登録されていない Topic の予想一覧を取得する
-- **THEN** 空配列を返す
-
+### Requirement: 予想ページからの Bet 操作
+**Reason**: 予想とBetを統合カードUIに変更したため、Bet操作は `ui-organisms` の統合カードコンポーネントを通じて行われる。ユースケース・リポジトリ層のBet操作仕様は `bet-management` spec で引き続き定義する。
+**Migration**: BetFormは予想カード内にインライン統合される。Bet保存のServer ActionはそのままBetUsecaseを呼び出す。

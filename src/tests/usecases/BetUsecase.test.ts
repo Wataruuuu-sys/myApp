@@ -13,7 +13,8 @@ const mockBetRepository: IBetRepository = {
 }
 
 const mockPredictionRepository: IPredictionRepository = {
-  submit: vi.fn(),
+  create: vi.fn(),
+  update: vi.fn(),
   list: vi.fn(),
   findById: mockFindById,
 }

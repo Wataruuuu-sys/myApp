@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest"
 
 const mockPredictionCreate = vi.fn()
 const mockPredictionNumberCreate = vi.fn()
+const mockPredictionNumberUpdateMany = vi.fn()
 const mockPredictionFindMany = vi.fn()
 const mockTransaction = vi.fn()
 
@@ -10,6 +11,9 @@ vi.mock("@/lib/prisma", () => ({
     $transaction: (...args: Parameters<typeof mockTransaction>) => mockTransaction(...args),
     prediction: {
       findMany: (...args: Parameters<typeof mockPredictionFindMany>) => mockPredictionFindMany(...args),
+    },
+    predictionNumber: {
+      updateMany: (...args: Parameters<typeof mockPredictionNumberUpdateMany>) => mockPredictionNumberUpdateMany(...args),
     },
   },
 }))
@@ -32,13 +36,13 @@ describe("PredictionRepository", () => {
     )
   })
 
-  describe("submit", () => {
+  describe("create", () => {
     it("Prediction・PredictionNumberを正しいクエリ引数でトランザクション内に作成しPredictionModelを返す", async () => {
       const predictionModel = { id: 1, fk_topic_id: 1, prediction_type: "number", created_at: new Date() }
       mockPredictionCreate.mockResolvedValue(predictionModel)
       mockPredictionNumberCreate.mockResolvedValue({})
 
-      const result = await repository.submit(1, 42)
+      const result = await repository.create(1, 42)
 
       expect(mockPredictionCreate).toHaveBeenCalledWith({
         data: { fk_topic_id: 1, prediction_type: "number" },
@@ -47,6 +51,19 @@ describe("PredictionRepository", () => {
         data: { fk_prediction_id: 1, predict: 42 },
       })
       expect(result).toEqual(predictionModel)
+    })
+  })
+
+  describe("update", () => {
+    it("predictionIdで絞り込んでPredictionNumberのpredictを更新する", async () => {
+      mockPredictionNumberUpdateMany.mockResolvedValue({ count: 1 })
+
+      await repository.update(1, 99)
+
+      expect(mockPredictionNumberUpdateMany).toHaveBeenCalledWith({
+        where: { fk_prediction_id: 1 },
+        data: { predict: 99 },
+      })
     })
   })
 

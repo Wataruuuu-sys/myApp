@@ -1,7 +1,7 @@
 import { answerUsecase, betUsecase, predictionUsecase, topicUsecase } from "@/lib/container"
 import { notFound } from "next/navigation"
 import { TopicDetail } from "@/components/organisms/TopicDetail"
-import { saveBet } from "@/app/topic/[id]/predictions/actions"
+import type { PredictionWithBet } from "@/types/prediction"
 
 export const dynamic = "force-dynamic"
 
@@ -23,12 +23,14 @@ export default async function TopicDetailPage({ params }: Props) {
   }
 
   const predictionList = await predictionUsecase.list(topicId)
-  const prediction = predictionList[0] ?? null
-
-  const bet = prediction ? await betUsecase.findByPredictionId(prediction.id) : null
-  const saveBetAction = prediction ? saveBet.bind(null, topicId, prediction.id) : null
+  const predictions: PredictionWithBet[] = await Promise.all(
+    predictionList.map(async (p) => ({
+      ...p,
+      bet: await betUsecase.findByPredictionId(p.id),
+    }))
+  )
 
   const answer = topic.status === "answered" ? await answerUsecase.findByTopic(topicId) : null
 
-  return <TopicDetail topic={topic} prediction={prediction} bet={bet} answer={answer} saveBetAction={saveBetAction} />
+  return <TopicDetail topic={topic} predictions={predictions} answer={answer} topicId={topicId} />
 }

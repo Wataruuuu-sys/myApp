@@ -2,17 +2,32 @@
 
 import { predictionUsecase, betUsecase } from "@/lib/container";
 import { Validation } from "@/lib/validation";
-import { executeAction } from "@/lib/action";
 import { revalidatePath } from "next/cache";
-import type { SubmitPredictionResult, PredictionWithValue } from "@/types/prediction";
+import type { CreatePredictionResult, UpdatePredictionResult, PredictionWithValue } from "@/types/prediction";
 import type { SaveBetResult } from "@/types/bet";
 
-export async function submitPrediction(topicId: number, formData: FormData): Promise<SubmitPredictionResult> {
+export async function createPrediction(topicId: number, formData: FormData): Promise<CreatePredictionResult> {
   const predict = Validation.string(formData, "predict");
   if (!predict) {
     return { ok: false, error: "invalid_prediction" };
   }
-  return executeAction(predictionUsecase, { topicId, predict }, [`/topic/${topicId}`]);
+  const result = await predictionUsecase.create({ topicId, predict });
+  if (result.ok) {
+    revalidatePath(`/topic/${topicId}`);
+  }
+  return result;
+}
+
+export async function updatePrediction(predictionId: number, topicId: number, formData: FormData): Promise<UpdatePredictionResult> {
+  const predict = Validation.string(formData, "predict");
+  if (!predict) {
+    return { ok: false, error: "invalid_prediction" };
+  }
+  const result = await predictionUsecase.update({ predictionId, predict });
+  if (result.ok) {
+    revalidatePath(`/topic/${topicId}`);
+  }
+  return result;
 }
 
 export async function predictions(topicId: number): Promise<PredictionWithValue[]> {
