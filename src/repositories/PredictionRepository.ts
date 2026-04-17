@@ -26,4 +26,8 @@ export class PredictionRepository implements IPredictionRepository {
       include: { numbers: { select: { predict: true } } },
     })
   }
+
+  async findById(id: number): Promise<PredictionModel | null> {
+    return prisma.prediction.findUnique({ where: { id } })
+  }
 }

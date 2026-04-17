@@ -1,16 +1,21 @@
 import { Anchor } from "@/components/atoms/Anchor"
 import { Heading } from "@/components/atoms/Heading"
+import { BetForm } from "@/components/organisms/BetForm"
 import type { Topic } from "@/domain/Topic"
 import type { PredictionWithValue } from "@/types/prediction"
 import type { AnswerWithValue } from "@/types/answer"
+import type { SaveBetResult } from "@/types/bet"
+import type { Bet } from "@/domain/Bet"
 
 type Props = {
   topic: Topic
   prediction: PredictionWithValue | null
+  bet: Bet | null
   answer: AnswerWithValue | null
+  saveBetAction: ((formData: FormData) => Promise<SaveBetResult>) | null
 }
 
-export function TopicDetail({ topic, prediction, answer }: Props) {
+export function TopicDetail({ topic, prediction, bet, answer, saveBetAction }: Props) {
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -33,6 +38,15 @@ export function TopicDetail({ topic, prediction, answer }: Props) {
           )}
         </div>
       </section>
+
+      {prediction && saveBetAction && (
+        <section className="bg-surface border border-border rounded-xl p-6 shadow-sm">
+          <Heading level={2}>Bet</Heading>
+          <div className="mt-3">
+            <BetForm currentValue={bet?.value ?? null} action={saveBetAction} />
+          </div>
+        </section>
+      )}
 
       {answer && (
         <section className="bg-surface border border-border rounded-xl p-6 shadow-sm">

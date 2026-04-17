@@ -58,9 +58,20 @@ model Prediction {
   id              Int              @id @default(autoincrement())
   fk_topic_id     Int
   prediction_type PredictionType
+  fk_bet_id       Int?             @unique
   created_at      DateTime         @default(now())
   topic           Topic            @relation(fields: [fk_topic_id], references: [id])
   numbers         PredictionNumber[]
+  bet             Bet?             @relation(name: "PredictionToBet", fields: [fk_bet_id], references: [id])
+  betSource       Bet?             @relation(name: "BetToPrediction")
+}
+
+model Bet {
+  id                Int        @id @default(autoincrement())
+  fk_prediction_id  Int        @unique
+  value             Float
+  prediction        Prediction @relation(name: "BetToPrediction", fields: [fk_prediction_id], references: [id])
+  predictionTarget  Prediction? @relation(name: "PredictionToBet")
 }
 
 model PredictionNumber {

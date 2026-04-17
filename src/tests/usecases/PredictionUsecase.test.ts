@@ -10,6 +10,7 @@ const mockFind = vi.fn()
 const mockPredictionRepository: IPredictionRepository = {
   submit: mockSubmit,
   list: mockList,
+  findById: vi.fn(),
 }
 
 const mockTopicRepository: ITopicRepository = {

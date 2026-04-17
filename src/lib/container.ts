@@ -7,6 +7,9 @@ import type { IAnswerUsecase } from "@/usecases/IUsecase/IAnswerUsecase"
 import { PredictionRepository } from "@/repositories/PredictionRepository"
 import { PredictionUsecase } from "@/usecases/PredictionUsecase"
 import type { IPredictionUsecase } from "@/usecases/IUsecase/IPredictionUsecase"
+import { BetRepository } from "@/repositories/BetRepository"
+import { BetUsecase } from "@/usecases/BetUsecase"
+import type { IBetUsecase } from "@/usecases/IUsecase/IBetUsecase"
 
 const topicRepository = new TopicRepository()
 export const topicUsecase: ITopicUsecase = new TopicUsecase(topicRepository)
@@ -16,3 +19,6 @@ export const answerUsecase: IAnswerUsecase = new AnswerUsecase(answerRepository,
 
 const predictionRepository = new PredictionRepository()
 export const predictionUsecase: IPredictionUsecase = new PredictionUsecase(predictionRepository, topicRepository)
+
+const betRepository = new BetRepository()
+export const betUsecase: IBetUsecase = new BetUsecase(betRepository, predictionRepository)
