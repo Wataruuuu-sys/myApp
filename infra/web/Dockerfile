@@ -5,11 +5,9 @@ COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 COPY . .
 
-RUN bunx prisma generate
-
-# ---- dev ----
-FROM base AS dev
-CMD ["bun", "dev"]
+# ---- ci ----
+FROM base AS ci
+CMD ["sh", "-c", "bun run prisma:generate && bun run prisma:push && bun run test"]
 
 # ---- build ----
 FROM base AS build

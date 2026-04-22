@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "bun run prisma:generate && bun run prisma:push && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -11,9 +11,11 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate deploy",
-    "db:migrate:dev": "prisma migrate dev"
+    "prisma:generate": "prisma generate",
+    "prisma:push": "prisma db push",
+    "pg:setup": "createuser -s myapp || true && createdb myapp -O myapp || true",
+    "pg:start": "brew services start postgresql@17",
+    "pg:stop": "brew services stop postgresql@17"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.4.1",

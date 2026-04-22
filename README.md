@@ -47,3 +47,65 @@ ORM 実装を直接参照しない設計としています。
      ↓
 [ PostgreSQL (RDS) ]
 ```
+
+## 開発環境セットアップ
+
+### 必要なツール
+
+- [Bun](https://bun.sh) v1 以上
+- [PostgreSQL](https://www.postgresql.org) v17（ホストにインストール）
+
+### PostgreSQL のインストール（macOS）
+
+```bash
+brew install postgresql@17
+bun run pg:start
+```
+
+> `bun run pg:stop` で停止できます。
+
+初回のみ、アプリ用のユーザと DB を作成します。
+
+```bash
+bun run pg:setup
+```
+
+### セットアップ
+
+```bash
+# 依存パッケージのインストール
+bun install
+
+# 環境変数の設定
+cp .env.example .env
+```
+
+`.env` の `DATABASE_URL` が上記で作成した DB に向いていることを確認してください。
+
+```
+DATABASE_URL=postgresql://myapp:myapp@localhost:5432/myapp
+```
+
+### 起動
+
+```bash
+bun dev
+```
+
+`prisma generate`（クライアント生成）→ `prisma db push`（スキーマ適用）→ Next.js 起動 の順で自動実行されます。
+
+### CI モード（全コンテナ構成）
+
+ホスト環境に依存せずコンテナのみで動かす場合は、[Apple Container](https://developer.apple.com/documentation/virtualization) を使用します。
+
+```bash
+# イメージビルド（初回・Dockerfile 変更時）
+make build-db
+make build-web
+
+# 起動（DB + web コンテナ）
+make container-up
+
+# 停止
+make container-down
+```

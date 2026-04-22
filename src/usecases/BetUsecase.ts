@@ -1,6 +1,6 @@
 import type { IBetRepository } from "@/repositories/IRepository/IBetRepository"
 import type { IPredictionRepository } from "@/repositories/IRepository/IPredictionRepository"
-import type { BetInput, SaveBetResult } from "@/types/bet"
+import type { BetInput, BetData, SaveBetResult } from "@/types/bet"
 import type { IBetUsecase } from "./IUsecase/IBetUsecase"
 import { Bet } from "@/domain/Bet"
 
@@ -25,8 +25,10 @@ export class BetUsecase implements IBetUsecase {
     return { ok: true }
   }
 
-  async findByPredictionId(predictionId: number): Promise<Bet | null> {
+  async findByPredictionId(predictionId: number): Promise<BetData | null> {
     const model = await this.betRepository.findByPredictionId(predictionId)
-    return model ? Bet.from(model) : null
+    if (!model) return null
+    const bet = Bet.from(model)
+    return { id: bet.id, predictionId: bet.predictionId, value: bet.value }
   }
 }

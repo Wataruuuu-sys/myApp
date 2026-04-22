@@ -1,5 +1,5 @@
 import type { Prediction } from "@/domain/Prediction"
-import type { Bet } from "@/domain/Bet"
+import type { BetData } from "@/types/bet"
 
 export type CreatePredictionInput = { topicId: number; predict: string }
 export type UpdatePredictionInput = { predictionId: number; predict: string }
@@ -13,4 +13,4 @@ export type UpdatePredictionResult =
   | { ok: false; error: "invalid_prediction" | "topic_not_open" }
 
 export type PredictionWithValue = Prediction & { predict: number }
-export type PredictionWithBet = PredictionWithValue & { bet: Bet | null }
+export type PredictionWithBet = PredictionWithValue & { bet: BetData | null }
